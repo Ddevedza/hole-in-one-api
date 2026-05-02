@@ -375,8 +375,35 @@ def remove_events_before_registration(events):
     print(f"Events removed due to pre-registration timestamp: {removed}")
     return valid_events
 
+"""
+Runs all cleaning rules in order.
+Returns clean events ready for loading into the database.
+"""
+def run_cleaning(events, maps):
+    valid_map_ids = set(maps.keys())
+
+    events = remove_events(events)
+    events = remove_invalid_events(events)
+    events = remove_invalid_outcomes(events)
+    events = remove_matching_oponents(events)
+    events = remove_unregistered_users(events)
+    events = remove_incomplete_matches(events)
+    events = remove_invalid_devices(events)
+    events = remove_invalid_session_state(events)
+    events = remove_future_timestamps(events)
+    events = remove_invalid_maps(events, valid_map_ids)
+    events = remove_duplicate_registrations(events)
+    events = remove_events_before_registration(events)
+
+    print(f"\n=== Cleaning Complete ===")
+    print(f"Ended with: {len(events)} events")
+    print(f"========================\n")
+
+    return events
+
 if __name__ == '__main__':
 
+    # Function tests
     events = load_events("data/events.jsonl") # loading events
     print(f"Total events loaded: {len(events)}")
 
@@ -418,8 +445,3 @@ if __name__ == '__main__':
 
     events = remove_events_before_registration(events)
     print(f"Events after removing pre-registered events: {len(events)}")
-
-    print(f"\n=== Cleaning Complete ===")
-    print(f"Started with: 5000 events")
-    print(f"Ended with:   {len(events)} events")
-    print(f"========================")
