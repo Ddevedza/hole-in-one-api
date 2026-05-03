@@ -141,7 +141,7 @@ GET /user-stats?countries=SRB&os=iOS
 | Field | Description |
 |---|---|
 | username | Player's in-game nickname |
-| country | Country code eg.. SRB, GBR |
+| country | Country code eg. SRB, GBR |
 | registration_date | Date of registration (YYYY-MM-DD) |
 | total_playtime | Total seconds with the app open |
 | total_win_ratio | Win ratio between 0 and 1 |
