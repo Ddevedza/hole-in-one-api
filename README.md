@@ -1,28 +1,15 @@
-# Hole In One API
+# Hole In One API 
 
 A data engineering pipeline and REST API for golf game event analytics, built for the Nordeus Job Fair 2026 Data Engineering Challenge.
 
 ---
 
-## What It Does
+## Architecture
 
-This project takes raw golf game event data and makes it queryable through a clean REST API:
+<img width="1222" height="524" alt="architecture png" src="https://github.com/user-attachments/assets/e29d968f-b451-459d-8627-0762c6761f2c" />
 
-1. **Cleans** raw game event data using 13 validation rules
-2. **Stores** clean data in a SQLite database  
-3. **Serves** statistics through three REST API endpoints
 
-The input files are processed **once at startup**. After that, all queries are answered from the database — never from the raw files again. This keeps the API fast and efficient.
-
----
-
-## Architecture & Design Decisions
-
-```
-events.jsonl ──┐
-               ├──► cleaner.py ──► golf.db ──► FastAPI ──► User
-maps.jsonl   ──┘
-```
+The input files are processed **once at startup**. After that, all queries are answered from the SQLite database — never from the raw files again.
 
 The project is split into four files — each with one clear responsibility:
 
@@ -33,11 +20,11 @@ The project is split into four files — each with one clear responsibility:
 | `loader.py` | Takes clean events and inserts them into the database |
 | `main.py` | Starts FastAPI, runs pipeline on startup, registers routes |
 
-**Why SQLite?** It is built into Python, requires no installation, and stores everything in a single file. The right tool for this use case — one application, moderate data, no concurrent users.
+**Why SQLite?** Built into Python, no installation needed, stores everything in a single file. Right tool for this use case.
 
-**Why FastAPI?** Modern, fast to build with, and automatically generates interactive documentation at `/docs`. No extra work needed.
+**Why FastAPI?** Modern, fast to build with, automatically generates interactive docs at `/docs`.
 
-**Why separate files?** Separation of concerns — each file does one job. Makes the code easier to read, test, and maintain.
+**Why separate files?** Separation of concerns — each file does one job. Easier to read, test, and maintain.
 
 ---
 
@@ -125,7 +112,7 @@ Returns player statistics ordered by total playtime descending.
 - `countries` — comma separated country codes eg. `SRB,GBR`
 - `os` — operating system filter eg. `iOS` or `Android`
 
-Note: The OS filter uses session data, not registration data. A user appears in iOS results if they played any session on iOS, regardless of registration OS.
+Note: The OS filter uses session data, not registration data.
 
 **Examples:**
 ```
@@ -181,9 +168,7 @@ GET /map-stats/Lake?date_from=2026-04-03&date_to=2026-04-06
 
 ### GET /chart
 
-Returns an HTML page with a line chart showing match counts per map over time.
-
-Default behaviour: shows last 7 days of available data. Each map is represented as a separate colored line.
+Returns an HTML page with a line chart showing match counts per map over time. Default shows last 7 days of available data.
 
 **Optional query parameters:**
 - `date_from` — custom start date (YYYY-MM-DD)
@@ -205,8 +190,6 @@ FastAPI automatically generates interactive documentation. Once the server is ru
 http://localhost:8000/docs
 ```
 
-You can test all endpoints directly from your browser without writing any code.
-
 ---
 
 ## Data Cleaning
@@ -215,7 +198,7 @@ The pipeline applies 13 cleaning rules before loading data:
 
 | Rule | Reason |
 |---|---|
-| Remove duplicate events | Network retries cause the same event to be sent twice — keep the earliest |
+| Remove duplicate events | Network retries cause the same event twice — keep the earliest |
 | Remove missing top-level fields | Events missing id, timestamp, user_id etc. are unusable |
 | Remove missing event_data fields | Each event type has required fields — discard if missing |
 | Remove invalid outcome values | match_finish outcome must be 0, 0.5, or 1 |
@@ -241,24 +224,24 @@ Events discarded:        701 (14%)
 
 ## Database Design
 
-Five SQLite tables were designed to support efficient querying:
+Five SQLite tables support efficient querying:
 
-- **maps** — golf course names and IDs from maps.jsonl
-- **users** — registered players with username, country, and registration date
+- **maps** — golf course names and IDs
+- **users** — registered players with username, country, registration date
 - **sessions** — gameplay sessions with start and end timestamps
 - **matches** — one row per match with map and timestamps
 - **match_results** — one row per player per match with outcome
 
-**Session tracking without state column (bonus point):** Sessions are reconstructed purely from session_ping timestamps. If more than 120 seconds pass between two pings, they belong to different sessions. The `state` column is intentionally ignored.
+**Session tracking without state column (bonus):** Sessions are reconstructed purely from session_ping timestamps. If more than 120 seconds pass between two pings, they belong to different sessions. The `state` column is intentionally ignored.
 
 ---
 
 ## Assumptions
 
-- A match is considered to have happened on the date it **ended** (match_finish timestamp)
+- A match happened on the date it **ended** (match_finish timestamp)
 - Win ratio is expressed as a decimal between 0 and 1
-- Total playtime includes all time with the app open, not just time in matches
-- The OS filter uses session OS — a user may register on one OS and play on another
+- Total playtime includes all time with the app open, not just matches
+- OS filter uses session OS — a user may register on one OS and play on another
 
 ---
 
