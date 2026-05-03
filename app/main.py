@@ -15,6 +15,8 @@ from loader import insert_maps, insert_users, insert_sessions, insert_matches, i
 
 from routes import user_stats
 from routes import map_stats
+from routes import chart
+
 
 
 from fastapi import FastAPI
@@ -23,6 +25,7 @@ from fastapi import FastAPI
 app = FastAPI()
 app.include_router(user_stats.router)
 app.include_router(map_stats.router)
+app.include_router(chart.router)
 
 @app.on_event("startup")
 def startup():
