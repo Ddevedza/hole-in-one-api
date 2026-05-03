@@ -248,5 +248,5 @@ Five SQLite tables support efficient querying:
 
 ## Author
 
-Dušan Devedžić
+Dušan Devedžić  
 LinkedIn: https://www.linkedin.com/in/dusan-devedzic-3812031b2/
