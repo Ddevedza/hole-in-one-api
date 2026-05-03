@@ -6,7 +6,8 @@ A data engineering pipeline and REST API for golf game event analytics, built fo
 
 ## Architecture
 
-<img width="1222" height="524" alt="architecture png" src="https://github.com/user-attachments/assets/e29d968f-b451-459d-8627-0762c6761f2c" />
+
+<img width="1235" height="524" alt="architecture" src="https://github.com/user-attachments/assets/301c4a17-0707-4f97-8cc9-97d93af7482f" />
 
 
 The input files are processed **once at startup**. After that, all queries are answered from the SQLite database — never from the raw files again.
