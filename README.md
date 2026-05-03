@@ -90,16 +90,35 @@ Place `events.jsonl` and `maps.jsonl` inside the `data/` folder.
 
 ## Running The App
 
+### Option 1 — Local
+
 ```bash
 uvicorn app.main:app --reload
 ```
 
-On first run the app automatically:
-1. Creates the SQLite database with 5 tables
-2. Reads and cleans all event data
-3. Prints a cleaning summary showing what was removed and why
-4. Loads clean data into the database
-5. Starts the API server at `http://localhost:8000`
+The server starts at `http://localhost:8000`
+
+---
+
+### Option 2 — GitHub Codespaces
+
+You can run this project directly in your browser using GitHub Codespaces — no local installation needed!
+
+1. Go to the repository on GitHub
+2. Click the green **Code** button
+3. Click the **Codespaces** tab
+4. Click **Create codespace on main**
+5. Wait for the environment to load
+6. In the terminal run:
+
+```bash
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+7. Click the **Ports** tab at the bottom
+8. Click the globe icon next to port **8000**
+9. Add `/docs` to the URL to see the interactive API documentation
 
 ---
 
