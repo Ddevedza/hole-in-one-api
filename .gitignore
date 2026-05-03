@@ -1,0 +1,6 @@
+golf.db
+.venv/
+__pycache__/
+*.pyc
+.idea/
+data/
