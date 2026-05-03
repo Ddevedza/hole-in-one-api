@@ -122,8 +122,8 @@ On first run the app automatically:
 Returns player statistics ordered by total playtime descending.
 
 **Optional query parameters:**
-- `countries` — comma separated country codes e.g. `SRB,GBR`
-- `os` — operating system filter e.g. `iOS` or `Android`
+- `countries` — comma separated country codes eg. `SRB,GBR`
+- `os` — operating system filter eg. `iOS` or `Android`
 
 Note: The OS filter uses session data, not registration data. A user appears in iOS results if they played any session on iOS, regardless of registration OS.
 
@@ -141,7 +141,7 @@ GET /user-stats?countries=SRB&os=iOS
 | Field | Description |
 |---|---|
 | username | Player's in-game nickname |
-| country | Country code e.g. SRB, GBR |
+| country | Country code eg.. SRB, GBR |
 | registration_date | Date of registration (YYYY-MM-DD) |
 | total_playtime | Total seconds with the app open |
 | total_win_ratio | Win ratio between 0 and 1 |
