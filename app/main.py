@@ -12,9 +12,17 @@ sys.path.append("app")
 from database import create_tables
 from cleaner import load_events, load_maps, run_cleaning
 from loader import insert_maps, insert_users, insert_sessions, insert_matches, insert_match_results
+
+from routes import user_stats
+from routes import map_stats
+
+
 from fastapi import FastAPI
 
+# app calls
 app = FastAPI()
+app.include_router(user_stats.router)
+app.include_router(map_stats.router)
 
 @app.on_event("startup")
 def startup():
@@ -30,5 +38,7 @@ def startup():
     insert_sessions(events)
     insert_matches(events)
     insert_match_results(events)
+
+    
     
     print("Data loaded successfully!")
